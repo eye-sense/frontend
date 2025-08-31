@@ -9,18 +9,21 @@ export class AuthService {
   constructor() { }
 
   async login(email: string, password: string): Promise<boolean> {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Simple validation for demo purposes
-    if (email && password) {
+    const response = await fetch('http://127.0.0.1:8090/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+    });
+    const data = await response.json();
+    if (response.ok && data.success) {
       this.isAuthenticated = true;
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('userEmail', email);
       return true;
     }
-    
-    throw new Error('Invalid credentials');
+    throw new Error(data.error || 'Invalid credentials');
   }
 
   logout(): void {
