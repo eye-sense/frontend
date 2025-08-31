@@ -1,6 +1,6 @@
 .analysis-container {
   min-height: 100vh;
-  background: var(--secondary-50);
+  background: linear-gradient(135deg, var(--primary-50) 0%, var(--accent-50) 100%);
 }
 
 /* Header */
@@ -29,9 +29,13 @@
   justify-content: center;
   width: 48px;
   height: 48px;
-  border-radius: 50%;
-  background: var(--primary-50);
-  border: 2px solid var(--primary-100);
+}
+
+.logo-mini-image {
+  width: 140px;
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .user-section {
@@ -77,10 +81,19 @@
   background: var(--secondary-50);
 }
 
+.upload-area.no-click {
+  cursor: default;
+}
+
 .upload-area:hover,
 .upload-area.active {
   border-color: var(--primary-500);
   background: var(--primary-50);
+}
+
+.upload-area.no-click:hover {
+  border-color: var(--secondary-300);
+  background: var(--secondary-50);
 }
 
 .upload-placeholder {
@@ -323,4 +336,60 @@
     flex-direction: column;
     text-align: center;
   }
+}
+
+/* Error Notification */
+.error-notification {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border-bottom: 1px solid #fecaca;
+  padding: var(--space-4) 0;
+  position: relative;
+  z-index: 10;
+}
+
+.error-content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: white;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid #fecaca;
+  box-shadow: var(--shadow-sm);
+}
+
+.error-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: #fef2f2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #dc2626;
+}
+
+.error-text {
+  flex: 1;
+  color: #dc2626;
+  font-weight: 500;
+}
+
+.error-close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: #dc2626;
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.error-close:hover {
+  background: #fef2f2;
 }

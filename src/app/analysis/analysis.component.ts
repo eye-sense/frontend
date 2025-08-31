@@ -2,12 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
-
-interface AnalysisResult {
-  normal: { confidence: number };
-  cataract: { confidence: number };
-  glaucoma: { confidence: number };
-}
+import { AnalysisService, AnalysisResult } from '../analysis.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-analysis',
@@ -23,10 +19,13 @@ export class AnalysisComponent implements OnInit {
   analysisProgress = 0;
   analysisResult: AnalysisResult | null = null;
   userEmail: string | null = null;
+  errorMessage: string | null = null;
+  showError = false;
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private analysisService: AnalysisService
   ) {}
 
   ngOnInit() {
@@ -69,13 +68,13 @@ export class AnalysisComponent implements OnInit {
   private handleFile(file: File) {
     // Validate file type
     if (!file.type.startsWith('image/')) {
-      alert('Por favor, selecione apenas arquivos de imagem.');
+      this.showErrorMessage('Por favor, selecione apenas arquivos de imagem.');
       return;
     }
 
     // Validate file size (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
-      alert('O arquivo deve ter no máximo 10MB.');
+      this.showErrorMessage('O arquivo deve ter no máximo 10MB.');
       return;
     }
 
@@ -110,59 +109,84 @@ export class AnalysisComponent implements OnInit {
 
     this.isAnalyzing = true;
     this.analysisProgress = 0;
+    let progressInterval: any;
 
-    // Simulate analysis progress
-    const progressInterval = setInterval(() => {
-      this.analysisProgress += Math.random() * 15;
-      if (this.analysisProgress > 95) {
-        this.analysisProgress = 95;
+    try {
+      // Simular progresso da requisição
+      progressInterval = setInterval(() => {
+        if (this.analysisProgress < 90) {
+          this.analysisProgress += Math.random() * 10;
+        }
+      }, 300);
+
+      // Fazer a requisição para o backend usando o serviço
+      const response = await firstValueFrom(
+        this.analysisService.uploadImageForAnalysis(this.selectedFile)
+      );
+
+      clearInterval(progressInterval);
+      this.analysisProgress = 100;
+
+      // Processar a resposta do backend
+      if (response && response.analysisResult) {
+        // Mapear usando o método do serviço
+        this.analysisResult = this.analysisService.mapBackendResponse(response.analysisResult);
       }
-    }, 200);
 
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 3000));
+      setTimeout(() => {
+        this.isAnalyzing = false;
+      }, 500);
 
-    clearInterval(progressInterval);
-    this.analysisProgress = 100;
-
-    // Simulate analysis results
-    setTimeout(() => {
-      this.generateMockResults();
+    } catch (error: any) {
+      console.error('Erro na análise:', error);
+      
+      // Limpar progresso e parar análise
+      if (progressInterval) {
+        clearInterval(progressInterval);
+      }
       this.isAnalyzing = false;
-    }, 500);
+      this.analysisProgress = 0;
+      
+      // Mostrar erro ao usuário
+      const errorMessage = error?.error?.error || error?.message || 'Erro de conexão';
+      this.showErrorMessage(`Erro ao conectar com o backend: ${errorMessage}. Verifique se o servidor está rodando na porta 8090.`, 8000);
+      
+      // NÃO usar dados mock - deixar sem resultado
+      return;
+    }
   }
 
   private generateMockResults() {
     // Generate random but realistic confidence scores
     const results = [
-      { normal: 85, cataract: 10, glaucoma: 5 },
-      { normal: 25, cataract: 70, glaucoma: 5 },
-      { normal: 20, cataract: 15, glaucoma: 65 },
-      { normal: 60, cataract: 30, glaucoma: 10 },
-      { normal: 45, cataract: 45, glaucoma: 10 }
+      { saudavel: 85, catarata: 10, glaucoma: 5 },
+      { saudavel: 25, catarata: 70, glaucoma: 5 },
+      { saudavel: 20, catarata: 15, glaucoma: 65 },
+      { saudavel: 60, catarata: 30, glaucoma: 10 },
+      { saudavel: 45, catarata: 45, glaucoma: 10 }
     ];
 
     const randomResult = results[Math.floor(Math.random() * results.length)];
     
     this.analysisResult = {
-      normal: { confidence: randomResult.normal },
-      cataract: { confidence: randomResult.cataract },
-      glaucoma: { confidence: randomResult.glaucoma }
+      Saudavel: { confidence: randomResult.saudavel },
+      Catarata: { confidence: randomResult.catarata },
+      Glaucoma: { confidence: randomResult.glaucoma }
     };
   }
 
   getRecommendation(): string {
     if (!this.analysisResult) return '';
 
-    const maxConfidence = Math.max(
-      this.analysisResult.normal.confidence,
-      this.analysisResult.cataract.confidence,
-      this.analysisResult.glaucoma.confidence
-    );
+    const saudavelConf = this.analysisResult.Saudavel?.confidence || 0;
+    const catarataConf = this.analysisResult.Catarata?.confidence || 0;
+    const glaucomaConf = this.analysisResult.Glaucoma?.confidence || 0;
 
-    if (this.analysisResult.normal.confidence === maxConfidence) {
+    const maxConfidence = Math.max(saudavelConf, catarataConf, glaucomaConf);
+
+    if (saudavelConf === maxConfidence) {
       return 'Os resultados indicam um olho aparentemente normal. Continue com exames regulares para manter a saúde ocular.';
-    } else if (this.analysisResult.cataract.confidence === maxConfidence) {
+    } else if (catarataConf === maxConfidence) {
       return 'Possível presença de catarata detectada. Recomendamos consultar um oftalmologista para avaliação e possível tratamento.';
     } else {
       return 'Possível presença de glaucoma detectada. É importante procurar um oftalmologista imediatamente para exames complementares.';
@@ -192,9 +216,9 @@ Usuário: ${this.userEmail}
 Arquivo: ${this.selectedFile?.name}
 
 RESULTADOS DA ANÁLISE:
-- Olho Normal: ${this.analysisResult.normal.confidence}%
-- Catarata: ${this.analysisResult.cataract.confidence}%
-- Glaucoma: ${this.analysisResult.glaucoma.confidence}%
+- Olho Saudável: ${this.analysisResult.Saudavel?.confidence || 0}%
+- Catarata: ${this.analysisResult.Catarata?.confidence || 0}%
+- Glaucoma: ${this.analysisResult.Glaucoma?.confidence || 0}%
 
 RECOMENDAÇÃO:
 ${this.getRecommendation()}
@@ -215,8 +239,30 @@ Eye Sense - Análise Inteligente de Saúde Ocular
     this.analysisProgress = 0;
   }
 
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+  async logout() {
+    try {
+      await this.authService.logout();
+    } catch (error) {
+      console.warn('Logout error:', error);
+    } finally {
+      this.router.navigate(['/login']);
+    }
+  }
+
+  private showErrorMessage(message: string, duration: number = 5000) {
+    this.errorMessage = message;
+    this.showError = true;
+    
+    // Auto-hide após o tempo especificado
+    setTimeout(() => {
+      this.hideErrorMessage();
+    }, duration);
+  }
+
+  hideErrorMessage() {
+    this.showError = false;
+    setTimeout(() => {
+      this.errorMessage = null;
+    }, 300); // Tempo para animação
   }
 }

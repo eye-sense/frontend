@@ -4,8 +4,12 @@
   "tasks": [
     {
       "type": "npm",
-      "script": "start",
+      "script": "start:dev",
       "isBackground": true,
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
       "problemMatcher": {
         "owner": "typescript",
         "pattern": "$tsc",
@@ -15,15 +19,16 @@
             "regexp": "(.*?)"
           },
           "endsPattern": {
-            "regexp": "bundle generation complete"
+            "regexp": "Application bundle generation complete|Compiled successfully"
           }
         }
       }
     },
     {
       "type": "npm",
-      "script": "test",
+      "script": "start:prod",
       "isBackground": true,
+      "group": "build",
       "problemMatcher": {
         "owner": "typescript",
         "pattern": "$tsc",
@@ -33,7 +38,7 @@
             "regexp": "(.*?)"
           },
           "endsPattern": {
-            "regexp": "bundle generation complete"
+            "regexp": "Application bundle generation complete|Compiled successfully"
           }
         }
       }
