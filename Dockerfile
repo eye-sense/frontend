@@ -1,5 +1,6 @@
-# Dockerfile simples para Angular
-FROM node:18-alpine
+# Multi-stage build para Angular com Nginx
+# Stage 1: Build da aplicação
+FROM node:18-alpine AS builder
 
 # Definir diretório de trabalho
 WORKDIR /app
@@ -16,11 +17,17 @@ COPY . .
 # Build da aplicação para produção
 RUN npm run build:prod
 
-# Instalar servidor HTTP simples
-RUN npm install -g http-server
+# Stage 2: Servir com Nginx
+FROM nginx:alpine
 
-# Expor porta 8080
-EXPOSE 8080
+# Copiar configuração customizada do Nginx
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Comando para servir a aplicação
-CMD ["http-server", "dist/eye-sense-front/browser", "-p", "8080", "--cors"]
+# Copiar arquivos buildados do stage anterior
+COPY --from=builder /app/dist/eye-sense-front/browser /usr/share/nginx/html
+
+# Expor porta 80
+EXPOSE 80
+
+# Comando para iniciar o Nginx
+CMD ["nginx", "-g", "daemon off;"]
