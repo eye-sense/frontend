@@ -1,0 +1,13 @@
+# Arquivos e pastas a serem ignorados no build Docker
+node_modules
+npm-debug.log
+dist
+.git
+.gitignore
+README.md
+.env
+.nyc_output
+coverage
+.vscode
+.angular
+.cache
