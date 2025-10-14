@@ -1,4 +1,6 @@
+const runtimeConfig = (typeof window !== 'undefined' && (window as any).__env) || {};
+
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8090'
+  apiUrl: runtimeConfig.apiUrl || 'http://localhost:8090'
 };
