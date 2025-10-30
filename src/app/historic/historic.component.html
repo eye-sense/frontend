@@ -1,0 +1,379 @@
+<div class="historic-container">
+  <!-- Header -->
+  <header class="historic-header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo-section">
+          <div class="logo-mini">
+            <img src="logo.png" alt="Eye Sense Logo" class="logo-mini-image" />
+          </div>
+          <div>
+            <h1 class="text-xl font-bold text-accent-dark">Eye Sense</h1>
+            <p class="text-sm text-secondary">Histórico de Análises</p>
+          </div>
+        </div>
+
+        <div class="user-section">
+          <span class="text-sm text-secondary">{{ userEmail }}</span>
+          <button class="btn btn-secondary btn-sm" (click)="logout()">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16 17L21 12L16 7M21 12H9M9 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H9"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            Sair
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Error Message -->
+  <div *ngIf="showError" class="error-notification fade-in">
+    <div class="container">
+      <div class="error-content">
+        <div class="error-icon">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <path
+              d="M15 9l-6 6M9 9l6 6"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+        <div class="error-text">
+          <p>{{ errorMessage }}</p>
+        </div>
+        <button class="error-close" (click)="hideErrorMessage()">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6l-12 12M6 6l12 12"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <nav class="tabs-navigation">
+    <div class="container">
+      <div class="tabs">
+        <button class="tab-button" (click)="navigateToAnalysis()">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M17 8L12 3L7 8"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M12 3V15"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Análise
+        </button>
+        <button class="tab-button active">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 2L2 7L12 12L22 7L12 2Z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M2 17L12 22L22 17"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M2 12L12 17L22 12"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Histórico
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="historic-main">
+    <div class="container">
+      <div class="content-section">
+        <div class="section-header">
+          <h2 class="text-2xl font-semibold mb-2">Histórico de Análises</h2>
+          <p class="text-secondary mb-6">
+            Suas análises anteriores realizadas pela IA
+          </p>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="loading-state card">
+          <div class="loading-content">
+            <div class="loading-animation">
+              <div class="pulse-circle"></div>
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 64 64"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="32"
+                  cy="32"
+                  r="30"
+                  stroke="var(--primary-200)"
+                  stroke-width="4"
+                  fill="var(--primary-50)"
+                />
+                <circle
+                  cx="32"
+                  cy="28"
+                  r="12"
+                  stroke="var(--primary-600)"
+                  stroke-width="2"
+                  fill="none"
+                />
+                <circle cx="32" cy="28" r="6" fill="var(--primary-600)" />
+              </svg>
+            </div>
+            <h3 class="text-lg font-medium text-accent-dark mb-2">
+              Carregando histórico...
+            </h3>
+            <p class="text-secondary">Buscando suas análises anteriores</p>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div
+          *ngIf="!isLoading && historyItems.length === 0"
+          class="empty-state card"
+        >
+          <div class="empty-content">
+            <svg
+              width="64"
+              height="64"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                stroke="var(--secondary-400)"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <h3 class="text-lg font-medium text-accent-dark mb-2">
+              Nenhuma análise encontrada
+            </h3>
+            <p class="text-secondary mb-4">
+              Você ainda não realizou nenhuma análise. Que tal começar agora?
+            </p>
+            <button class="btn btn-primary" (click)="navigateToAnalysis()">
+              Realizar Análise
+            </button>
+          </div>
+        </div>
+
+        <!-- History List -->
+        <div *ngIf="!isLoading && historyItems.length > 0" class="history-list">
+          <div
+            *ngFor="let item of historyItems; trackBy: trackByObjectId"
+            class="history-item card"
+          >
+            <div class="history-header">
+              <div class="analysis-info">
+                <h3 class="font-medium text-accent-dark">
+                  Análise #{{ item.objectId }}
+                </h3>
+                <p class="text-sm text-secondary">
+                  Modelo: {{ item.modelVersion || "N/A" }}
+                </p>
+              </div>
+              <div
+                class="dominant-result"
+                [ngClass]="getDominantCondition(item).type"
+              >
+                <div class="result-badge">
+                  <span class="result-text">{{
+                    getDominantCondition(item).condition
+                  }}</span>
+                  <span class="result-percentage"
+                    >{{ getDominantCondition(item).percentage }}%</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="history-details">
+              <div class="probability-grid">
+                <div class="probability-item">
+                  <div class="probability-header">
+                    <div class="probability-icon success">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M20 6L9 17L4 12"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <span class="probability-label">Saudável</span>
+                  </div>
+                  <div class="probability-value">
+                    {{ item.healthyProbability || 0 }}%
+                  </div>
+                  <div class="probability-bar">
+                    <div
+                      class="probability-fill success"
+                      [style.width.%]="item.healthyProbability || 0"
+                    ></div>
+                  </div>
+                </div>
+
+                <div class="probability-item">
+                  <div class="probability-header">
+                    <div class="probability-icon warning">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <span class="probability-label">Catarata</span>
+                  </div>
+                  <div class="probability-value">
+                    {{ item.catarataProbability || 0 }}%
+                  </div>
+                  <div class="probability-bar">
+                    <div
+                      class="probability-fill warning"
+                      [style.width.%]="item.catarataProbability || 0"
+                    ></div>
+                  </div>
+                </div>
+
+                <div class="probability-item">
+                  <div class="probability-header">
+                    <div class="probability-icon error">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M12 8V12M12 16H12.01M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <span class="probability-label">Glaucoma</span>
+                  </div>
+                  <div class="probability-value">
+                    {{ item.glaucomaProbability || 0 }}%
+                  </div>
+                  <div class="probability-bar">
+                    <div
+                      class="probability-fill error"
+                      [style.width.%]="item.glaucomaProbability || 0"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

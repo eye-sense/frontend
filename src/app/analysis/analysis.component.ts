@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../auth.service';
-import { AnalysisService, AnalysisResult } from '../analysis.service';
 import { firstValueFrom } from 'rxjs';
+import { AnalysisResult, AnalysisService } from '../analysis.service';
+import { AuthService } from '../auth.service';
+import { PdfReportService } from '../pdf-report.service';
 
 @Component({
   selector: 'app-analysis',
@@ -25,8 +26,9 @@ export class AnalysisComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private analysisService: AnalysisService
-  ) {}
+    private analysisService: AnalysisService,
+    private pdfReportService: PdfReportService
+  ) { }
 
   ngOnInit() {
     // Check if user is logged in
@@ -34,7 +36,7 @@ export class AnalysisComponent implements OnInit {
       this.router.navigate(['/login']);
       return;
     }
-    
+
     this.userEmail = this.authService.getUserEmail();
   }
 
@@ -51,7 +53,7 @@ export class AnalysisComponent implements OnInit {
   onDrop(event: DragEvent) {
     event.preventDefault();
     this.isDragOver = false;
-    
+
     const files = event.dataTransfer?.files;
     if (files && files.length > 0) {
       this.handleFile(files[0]);
@@ -139,62 +141,77 @@ export class AnalysisComponent implements OnInit {
 
     } catch (error: any) {
       console.error('Erro na análise:', error);
-      
+
       // Limpar progresso e parar análise
       if (progressInterval) {
         clearInterval(progressInterval);
       }
       this.isAnalyzing = false;
       this.analysisProgress = 0;
-      
+
       // Mostrar erro ao usuário
       const errorMessage = error?.error?.error || error?.message || 'Erro de conexão';
       this.showErrorMessage(`Erro ao conectar com o backend: ${errorMessage}. Verifique se o servidor está rodando na porta 8090.`, 8000);
-      
+
       // NÃO usar dados mock - deixar sem resultado
       return;
     }
-  }
-
-  private generateMockResults() {
-    // Generate random but realistic confidence scores
-    const results = [
-      { saudavel: 85, catarata: 10, glaucoma: 5 },
-      { saudavel: 25, catarata: 70, glaucoma: 5 },
-      { saudavel: 20, catarata: 15, glaucoma: 65 },
-      { saudavel: 60, catarata: 30, glaucoma: 10 },
-      { saudavel: 45, catarata: 45, glaucoma: 10 }
-    ];
-
-    const randomResult = results[Math.floor(Math.random() * results.length)];
-    
-    this.analysisResult = {
-      Saudavel: { confidence: randomResult.saudavel },
-      Catarata: { confidence: randomResult.catarata },
-      Glaucoma: { confidence: randomResult.glaucoma }
-    };
   }
 
   getRecommendation(): string {
     if (!this.analysisResult) return '';
 
     const saudavelConf = this.analysisResult.Saudavel?.confidence || 0;
-    const catarataConf = this.analysisResult.Catarata?.confidence || 0;
-    const glaucomaConf = this.analysisResult.Glaucoma?.confidence || 0;
+    const doenteConf = this.analysisResult.Doente?.confidence || 0;
 
-    const maxConfidence = Math.max(saudavelConf, catarataConf, glaucomaConf);
-
-    if (saudavelConf === maxConfidence) {
+    if (saudavelConf > doenteConf) {
       return 'Os resultados indicam um olho aparentemente normal. Continue com exames regulares para manter a saúde ocular.';
-    } else if (catarataConf === maxConfidence) {
-      return 'Possível presença de catarata detectada. Recomendamos consultar um oftalmologista para avaliação e possível tratamento.';
     } else {
-      return 'Possível presença de glaucoma detectada. É importante procurar um oftalmologista imediatamente para exames complementares.';
+      const catarataConf = this.analysisResult.Catarata?.confidence || 0;
+      const glaucomaConf = this.analysisResult.Glaucoma?.confidence || 0;
+
+      if (catarataConf > glaucomaConf) {
+        return 'Possível presença de catarata detectada. Recomendamos consultar um oftalmologista para avaliação e possível tratamento.';
+      } else if (glaucomaConf > catarataConf) {
+        return 'Possível presença de glaucoma detectada. É importante procurar um oftalmologista imediatamente para exames complementares.';
+      } else {
+        return 'Anomalia detectada no olho. Recomendamos consultar um oftalmologista para avaliação detalhada.';
+      }
     }
   }
 
-  downloadReport() {
-    // Simulate report download
+  // Método para verificar se o olho está saudável
+  isHealthy(): boolean {
+    if (!this.analysisResult) return false;
+    const saudavelConf = this.analysisResult.Saudavel?.confidence || 0;
+    const doenteConf = this.analysisResult.Doente?.confidence || 0;
+    return saudavelConf > doenteConf;
+  }
+
+  async downloadReport() {
+    if (!this.analysisResult || !this.userEmail) return;
+
+    try {
+      const reportData = {
+        userEmail: this.userEmail,
+        fileName: this.selectedFile?.name || 'N/A',
+        fileSize: this.selectedFile ? this.formatFileSize(this.selectedFile.size) : 'N/A',
+        imagePreview: this.imagePreview,
+        analysisResult: this.analysisResult,
+        recommendation: this.getRecommendation()
+      };
+
+      await this.pdfReportService.generatePdfReport(reportData);
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+      this.showErrorMessage('Erro ao gerar relatório PDF. Tente novamente.');
+
+      // Fallback para download em texto
+      this.downloadTextReport();
+    }
+  }
+
+  private downloadTextReport() {
     const reportContent = this.generateReportContent();
     const blob = new Blob([reportContent], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
@@ -208,6 +225,23 @@ export class AnalysisComponent implements OnInit {
   private generateReportContent(): string {
     if (!this.analysisResult) return '';
 
+    const saudavelConf = this.analysisResult.Saudavel?.confidence || 0;
+    const doenteConf = this.analysisResult.Doente?.confidence || 0;
+    const isHealthy = saudavelConf > doenteConf;
+
+    let resultDetails = `
+RESULTADOS DA ANÁLISE:
+- Olho Saudável: ${saudavelConf}%
+- Olho Doente: ${doenteConf}%`;
+
+    if (!isHealthy) {
+      resultDetails += `
+
+DETALHES DA CONDIÇÃO:
+- Catarata: ${this.analysisResult.Catarata?.confidence || 0}%
+- Glaucoma: ${this.analysisResult.Glaucoma?.confidence || 0}%`;
+    }
+
     return `
 EYE SENSE - RELATÓRIO DE ANÁLISE OFTALMOLÓGICA
 
@@ -215,17 +249,14 @@ Data: ${new Date().toLocaleDateString('pt-BR')}
 Usuário: ${this.userEmail}
 Arquivo: ${this.selectedFile?.name}
 
-RESULTADOS DA ANÁLISE:
-- Olho Saudável: ${this.analysisResult.Saudavel?.confidence || 0}%
-- Catarata: ${this.analysisResult.Catarata?.confidence || 0}%
-- Glaucoma: ${this.analysisResult.Glaucoma?.confidence || 0}%
+${resultDetails}
 
 RECOMENDAÇÃO:
 ${this.getRecommendation()}
 
 IMPORTANTE:
-Este relatório é baseado em análise de inteligência artificial e não substitui 
-a consulta com um profissional médico qualificado. Sempre procure um oftalmologista 
+Este relatório é baseado em análise de inteligência artificial e não substitui
+a consulta com um profissional médico qualificado. Sempre procure um oftalmologista
 para diagnóstico e tratamento adequados.
 
 Eye Sense - Análise Inteligente de Saúde Ocular
@@ -249,10 +280,14 @@ Eye Sense - Análise Inteligente de Saúde Ocular
     }
   }
 
+  navigateToHistory() {
+    this.router.navigate(['/historic']);
+  }
+
   private showErrorMessage(message: string, duration: number = 5000) {
     this.errorMessage = message;
     this.showError = true;
-    
+
     // Auto-hide após o tempo especificado
     setTimeout(() => {
       this.hideErrorMessage();

@@ -50,6 +50,47 @@
   min-height: 36px;
 }
 
+/* Navigation Tabs */
+.tabs-navigation {
+  border-bottom: 1px solid var(--secondary-200);
+  padding-top: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.tab-button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-6);
+  background: none;
+  border: none;
+  color: var(--secondary-600);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+  position: relative;
+}
+
+.tab-button:hover {
+  color: var(--primary-600);
+  background: var(--primary-50);
+}
+
+.tab-button.active {
+  color: var(--primary-600);
+  border-bottom-color: var(--primary-600);
+  background: var(--primary-50);
+}
+
 /* Main Content */
 .analysis-main {
   padding: var(--space-8) 0;
@@ -159,6 +200,7 @@
     transform: translate(-50%, -50%) scale(0.8);
     opacity: 1;
   }
+
   100% {
     transform: translate(-50%, -50%) scale(1.4);
     opacity: 0;
@@ -188,6 +230,24 @@
 
 .results-header {
   text-align: center;
+}
+
+/* Primary Assessment */
+.primary-assessment {
+  margin-bottom: var(--space-8);
+}
+
+.assessment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+/* Condition Details */
+.condition-details {
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--secondary-200);
 }
 
 .results-grid {
@@ -308,30 +368,39 @@
     flex-direction: column;
     gap: var(--space-4);
   }
-  
+
+  .tabs {
+    justify-content: center;
+  }
+
+  .tab-button {
+    padding: var(--space-3) var(--space-4);
+  }
+
   .content-grid {
     padding: 0 var(--space-4);
   }
-  
+
   .upload-section,
   .results-section {
     padding: var(--space-6);
   }
-  
+
   .preview-image {
     width: 150px;
     height: 150px;
   }
-  
+
   .file-actions,
   .results-actions {
     flex-direction: column;
   }
-  
+
+  .assessment-grid,
   .results-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .recommendation {
     flex-direction: column;
     text-align: center;

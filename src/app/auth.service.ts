@@ -34,6 +34,7 @@ export class AuthService {
         this.isAuthenticated = true;
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('userEmail', response.email || email);
+        localStorage.setItem('userEmail', email);
         return true;
       } else {
         throw new Error(response.error || 'Login failed');
@@ -65,6 +66,7 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     if (typeof window !== 'undefined' && localStorage) {
+      console.log("aqui")
       return localStorage.getItem('isLoggedIn') === 'true';
     }
     return this.isAuthenticated;

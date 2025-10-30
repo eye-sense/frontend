@@ -5,20 +5,31 @@
       <div class="header-content">
         <div class="logo-section">
           <div class="logo-mini">
-            <img src="logo.png" alt="Eye Sense Logo" class="logo-mini-image">
+            <img src="logo.png" alt="Eye Sense Logo" class="logo-mini-image" />
           </div>
           <div>
             <h1 class="text-xl font-bold text-accent-dark">Eye Sense</h1>
             <p class="text-sm text-secondary">Análise Oftalmológica</p>
           </div>
         </div>
-        
+
         <div class="user-section">
           <span class="text-sm text-secondary">{{ userEmail }}</span>
           <button class="btn btn-secondary btn-sm" (click)="logout()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M16 17L21 12L16 7M21 12H9M9 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H9" 
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16 17L21 12L16 7M21 12H9M9 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H9"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
             Sair
           </button>
@@ -27,22 +38,122 @@
     </div>
   </header>
 
+  <!-- Navigation Tabs -->
+  <nav class="tabs-navigation">
+    <div class="container">
+      <div class="tabs">
+        <button class="tab-button active">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M17 8L12 3L7 8"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M12 3V15"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Análise
+        </button>
+        <button class="tab-button" (click)="navigateToHistory()">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 2L2 7L12 12L22 7L12 2Z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M2 17L12 22L22 17"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M2 12L12 17L22 12"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Histórico
+        </button>
+      </div>
+    </div>
+  </nav>
+
   <!-- Error Message -->
   <div *ngIf="showError" class="error-notification fade-in">
     <div class="container">
       <div class="error-content">
         <div class="error-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-            <path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <path
+              d="M15 9l-6 6M9 9l6 6"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
           </svg>
         </div>
         <div class="error-text">
           <p>{{ errorMessage }}</p>
         </div>
         <button class="error-close" (click)="hideErrorMessage()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18 6l-12 12M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6l-12 12M6 6l12 12"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
           </svg>
         </button>
       </div>
@@ -57,26 +168,60 @@
         <div class="upload-section card">
           <div class="upload-header">
             <h2 class="text-2xl font-semibold mb-2">Análise de Imagem</h2>
-            <p class="text-secondary mb-6">Faça upload de uma imagem do olho para análise de catarata e glaucoma</p>
+            <p class="text-secondary mb-6">
+              Faça upload de uma imagem do olho para análise de catarata e
+              glaucoma
+            </p>
           </div>
 
-          <div class="upload-area" 
-               [class.active]="isDragOver" 
-               (drop)="onDrop($event)" 
-               (dragover)="onDragOver($event)" 
-               (dragleave)="onDragLeave($event)"
-               [class.no-click]="selectedFile"
-               (click)="!selectedFile && fileInput.click()">
-            
-            <div *ngIf="!selectedFile && !isAnalyzing" class="upload-placeholder">
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" 
-                      stroke="var(--primary-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M17 8L12 3L7 8" stroke="var(--primary-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12 3V15" stroke="var(--primary-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <div
+            class="upload-area"
+            [class.active]="isDragOver"
+            (drop)="onDrop($event)"
+            (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)"
+            [class.no-click]="selectedFile"
+            (click)="!selectedFile && fileInput.click()"
+          >
+            <div
+              *ngIf="!selectedFile && !isAnalyzing"
+              class="upload-placeholder"
+            >
+              <svg
+                width="64"
+                height="64"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"
+                  stroke="var(--primary-600)"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M17 8L12 3L7 8"
+                  stroke="var(--primary-600)"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M12 3V15"
+                  stroke="var(--primary-600)"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
-              <h3 class="text-lg font-medium text-accent-dark mb-2">Arraste uma imagem aqui</h3>
-              <p class="text-secondary mb-4">ou clique para selecionar um arquivo</p>
+              <h3 class="text-lg font-medium text-accent-dark mb-2">
+                Arraste uma imagem aqui
+              </h3>
+              <p class="text-secondary mb-4">
+                ou clique para selecionar um arquivo
+              </p>
               <button class="btn btn-primary">Selecionar Imagem</button>
             </div>
 
@@ -84,13 +229,22 @@
               <img [src]="imagePreview" alt="Preview" class="preview-image" />
               <div class="file-info">
                 <p class="font-medium">{{ selectedFile.name }}</p>
-                <p class="text-sm text-secondary">{{ formatFileSize(selectedFile.size) }}</p>
+                <p class="text-sm text-secondary">
+                  {{ formatFileSize(selectedFile.size) }}
+                </p>
               </div>
               <div class="file-actions">
-                <button class="btn btn-primary" (click)="analyzeImage(); $event.stopPropagation()" [disabled]="isAnalyzing">
+                <button
+                  class="btn btn-primary"
+                  (click)="analyzeImage(); $event.stopPropagation()"
+                  [disabled]="isAnalyzing"
+                >
                   Analisar Imagem
                 </button>
-                <button class="btn btn-secondary" (click)="removeFile(); $event.stopPropagation()">
+                <button
+                  class="btn btn-secondary"
+                  (click)="removeFile(); $event.stopPropagation()"
+                >
                   Remover
                 </button>
               </div>
@@ -99,26 +253,58 @@
             <div *ngIf="isAnalyzing" class="analyzing-state">
               <div class="loading-animation">
                 <div class="pulse-circle"></div>
-                <svg width="48" height="48" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="32" cy="32" r="30" stroke="var(--primary-200)" stroke-width="4" fill="var(--primary-50)"/>
-                  <circle cx="32" cy="28" r="12" stroke="var(--primary-600)" stroke-width="2" fill="none"/>
-                  <circle cx="32" cy="28" r="6" fill="var(--primary-600)"/>
+                <svg
+                  width="48"
+                  height="48"
+                  viewBox="0 0 64 64"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="30"
+                    stroke="var(--primary-200)"
+                    stroke-width="4"
+                    fill="var(--primary-50)"
+                  />
+                  <circle
+                    cx="32"
+                    cy="28"
+                    r="12"
+                    stroke="var(--primary-600)"
+                    stroke-width="2"
+                    fill="none"
+                  />
+                  <circle cx="32" cy="28" r="6" fill="var(--primary-600)" />
                 </svg>
               </div>
-              <h3 class="text-lg font-medium text-accent-dark mb-2">Analisando imagem...</h3>
-              <p class="text-secondary">Nossa IA está processando a imagem para detectar possíveis condições</p>
+              <h3 class="text-lg font-medium text-accent-dark mb-2">
+                Analisando imagem...
+              </h3>
+              <p class="text-secondary">
+                Nossa IA está processando a imagem para detectar possíveis
+                condições
+              </p>
               <div class="progress-bar">
-                <div class="progress-fill" [style.width.%]="analysisProgress"></div>
+                <div
+                  class="progress-fill"
+                  [style.width.%]="analysisProgress"
+                ></div>
               </div>
-              <p class="text-sm text-secondary mt-2">{{ analysisProgress }}% concluído</p>
+              <p class="text-sm text-secondary mt-2">
+                {{ analysisProgress }}% concluído
+              </p>
             </div>
 
-            <input #fileInput
-                   type="file"
-                   accept="image/*"
-                   (change)="onFileSelected($event)"
-                   class="file-input"
-                   hidden>
+            <input
+              #fileInput
+              type="file"
+              accept="image/*"
+              (change)="onFileSelected($event)"
+              class="file-input"
+              hidden
+            />
           </div>
         </div>
 
@@ -126,63 +312,171 @@
         <div *ngIf="analysisResult" class="results-section card fade-in">
           <div class="results-header">
             <h2 class="text-2xl font-semibold mb-2">Resultado da Análise</h2>
-            <p class="text-secondary mb-6">Baseado na análise da IA especializada em oftalmologia</p>
+            <p class="text-secondary mb-6">
+              Baseado na análise da IA especializada em oftalmologia
+            </p>
           </div>
 
-          <div class="results-grid">
-            <!-- Olho Saudável -->
-            <div class="result-card" [class.primary]="(analysisResult.Saudavel?.confidence || 0) >= 70">
-              <div class="result-header">
-                <div class="result-icon success">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
+          <!-- Primeira avaliação: Saudável vs Doente -->
+          <div class="primary-assessment">
+            <h3 class="text-lg font-semibold mb-4">Avaliação Geral</h3>
+            <div class="assessment-grid">
+              <!-- Olho Saudável -->
+              <div class="result-card" [class.primary]="isHealthy()">
+                <div class="result-header">
+                  <div class="result-icon success">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M20 6L9 17L4 12"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <h3 class="font-medium">Saudável</h3>
                 </div>
-                <h3 class="font-medium">Olho Saudável</h3>
+                <div class="result-percentage">
+                  <span class="text-3xl font-bold text-success"
+                    >{{ analysisResult.Saudavel?.confidence || 0 }}%</span
+                  >
+                </div>
+                <div class="confidence-bar">
+                  <div
+                    class="confidence-fill success"
+                    [style.width.%]="analysisResult.Saudavel?.confidence || 0"
+                  ></div>
+                </div>
               </div>
-              <div class="result-percentage">
-                <span class="text-3xl font-bold text-success">{{ analysisResult.Saudavel?.confidence || 0 }}%</span>
-              </div>
-              <div class="confidence-bar">
-                <div class="confidence-fill success" [style.width.%]="analysisResult.Saudavel?.confidence || 0"></div>
+
+              <!-- Olho Doente -->
+              <div class="result-card" [class.primary]="!isHealthy()">
+                <div class="result-header">
+                  <div class="result-icon error">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 8V12M12 16H12.01M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <h3 class="font-medium">Doente</h3>
+                </div>
+                <div class="result-percentage">
+                  <span class="text-3xl font-bold text-error"
+                    >{{ analysisResult.Doente?.confidence || 0 }}%</span
+                  >
+                </div>
+                <div class="confidence-bar">
+                  <div
+                    class="confidence-fill error"
+                    [style.width.%]="analysisResult.Doente?.confidence || 0"
+                  ></div>
+                </div>
               </div>
             </div>
+          </div>
 
-            <!-- Cataract -->
-            <div class="result-card" [class.primary]="(analysisResult.Catarata?.confidence || 0) >= 70">
-              <div class="result-header">
-                <div class="result-icon warning">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" 
-                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
+          <!-- Detalhamento das condições (apenas se doente) -->
+          <div *ngIf="!isHealthy()" class="condition-details">
+            <h3 class="text-lg font-semibold mb-4">Detalhamento da Condição</h3>
+            <div class="results-grid">
+              <!-- Cataract -->
+              <div
+                class="result-card"
+                [class.primary]="
+                  (analysisResult.Catarata?.confidence || 0) >
+                  (analysisResult.Glaucoma?.confidence || 0)
+                "
+              >
+                <div class="result-header">
+                  <div class="result-icon warning">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <h3 class="font-medium">Catarata</h3>
                 </div>
-                <h3 class="font-medium">Catarata</h3>
+                <div class="result-percentage">
+                  <span class="text-3xl font-bold text-warning"
+                    >{{ analysisResult.Catarata?.confidence || 0 }}%</span
+                  >
+                </div>
+                <div class="confidence-bar">
+                  <div
+                    class="confidence-fill warning"
+                    [style.width.%]="analysisResult.Catarata?.confidence || 0"
+                  ></div>
+                </div>
               </div>
-              <div class="result-percentage">
-                <span class="text-3xl font-bold text-warning">{{ analysisResult.Catarata?.confidence || 0 }}%</span>
-              </div>
-              <div class="confidence-bar">
-                <div class="confidence-fill warning" [style.width.%]="analysisResult.Catarata?.confidence || 0"></div>
-              </div>
-            </div>
 
-            <!-- Glaucoma -->
-            <div class="result-card" [class.primary]="(analysisResult.Glaucoma?.confidence || 0) >= 70">
-              <div class="result-header">
-                <div class="result-icon error">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 8V12M12 16H12.01M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" 
-                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
+              <!-- Glaucoma -->
+              <div
+                class="result-card"
+                [class.primary]="
+                  (analysisResult.Glaucoma?.confidence || 0) >
+                  (analysisResult.Catarata?.confidence || 0)
+                "
+              >
+                <div class="result-header">
+                  <div class="result-icon error">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 8V12M12 16H12.01M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <h3 class="font-medium">Glaucoma</h3>
                 </div>
-                <h3 class="font-medium">Glaucoma</h3>
-              </div>
-              <div class="result-percentage">
-                <span class="text-3xl font-bold text-error">{{ analysisResult.Glaucoma?.confidence || 0 }}%</span>
-              </div>
-              <div class="confidence-bar">
-                <div class="confidence-fill error" [style.width.%]="analysisResult.Glaucoma?.confidence || 0"></div>
+                <div class="result-percentage">
+                  <span class="text-3xl font-bold text-error"
+                    >{{ analysisResult.Glaucoma?.confidence || 0 }}%</span
+                  >
+                </div>
+                <div class="confidence-bar">
+                  <div
+                    class="confidence-fill error"
+                    [style.width.%]="analysisResult.Glaucoma?.confidence || 0"
+                  ></div>
+                </div>
               </div>
             </div>
           </div>
@@ -190,8 +484,20 @@
           <!-- Recommendation -->
           <div class="recommendation">
             <div class="recommendation-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="var(--primary-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M13 2L3 14H12L11 22L21 10H12L13 2Z"
+                  stroke="var(--primary-600)"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
             </div>
             <div>
@@ -202,13 +508,43 @@
 
           <div class="results-actions">
             <button class="btn btn-primary" (click)="downloadReport()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" 
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M14 2V8H20"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M16 13L12 17L8 13"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M12 17V9"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
-              Baixar Relatório
+              Baixar PDF
             </button>
             <button class="btn btn-secondary" (click)="newAnalysis()">
               Nova Análise
